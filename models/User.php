@@ -2,38 +2,51 @@
 
 namespace app\models;
 
-class User extends \yii\base\Object implements \yii\web\IdentityInterface
+class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
-    public $id;
-    public $username;
-    public $password;
-    public $authKey;
-    public $accessToken;
 
-    private static $users = [
-        '100' => [
-            'id' => '100',
-            'username' => 'admin',
-            'password' => 'admin',
-            'authKey' => 'test100key',
-            'accessToken' => '100-token',
-        ],
-        '101' => [
-            'id' => '101',
-            'username' => 'demo',
-            'password' => 'demo',
-            'authKey' => 'test101key',
-            'accessToken' => '101-token',
-        ],
-    ];
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['username', 'password'], 'required'],
+        ];
+    }
 
-
+    /**
+     * @inheritdoc
+     */
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            // Check if password has been changed
+            $dirtyPassword = $this->getDirtyAttributes(['password']);
+            if (!empty($dirtyPassword)) {
+                // Encode password before saving model
+                $this->password = static::EncodePassword($this->password);
+            }
+            
+            // Check if access token is not defined
+            if (empty($this->access_token)) {
+                // Generate access token
+                $this->access_token = \Yii::$app->security->generateRandomString();
+                $this->access_token_expires = date('Y-m-d H:i:s', strtotime('now + 15 minutes'));
+            }
+            
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     /**
      * @inheritdoc
      */
     public static function findIdentity($id)
     {
-        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+        return static::findOne($id);
     }
 
     /**
@@ -41,13 +54,9 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        foreach (self::$users as $user) {
-            if ($user['accessToken'] === $token) {
-                return new static($user);
-            }
-        }
-
-        return null;
+        return static::find()
+                ->where(['access_token' => $token])
+                ->andWhere(['>', 'access_token_expires', date('Y-m-d H:i:s')])->one();
     }
 
     /**
@@ -58,13 +67,7 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
      */
     public static function findByUsername($username)
     {
-        foreach (self::$users as $user) {
-            if (strcasecmp($user['username'], $username) === 0) {
-                return new static($user);
-            }
-        }
-
-        return null;
+        return static::findOne(['username' => $username]);
     }
 
     /**
@@ -80,7 +83,7 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
      */
     public function getAuthKey()
     {
-        return $this->authKey;
+        return false;
     }
 
     /**
@@ -88,9 +91,15 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
      */
     public function validateAuthKey($authKey)
     {
-        return $this->authKey === $authKey;
+        return false;
     }
 
+    public function ResetAccessToken()
+    {
+        $this->access_token = null;
+        $this->save();
+    }
+    
     /**
      * Validates password
      *
@@ -99,6 +108,18 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
      */
     public function validatePassword($password)
     {
-        return $this->password === $password;
+        return $this->password === static::EncodePassword($password);
     }
+
+    /**
+     * Returns password hash
+     *
+     * @param string $password password to encode
+     * @return string
+     */
+    public static function EncodePassword($password)
+    {
+        return md5($password);
+    }
+
 }
