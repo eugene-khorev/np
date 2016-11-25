@@ -9,6 +9,12 @@ use app\models\User;
 class AuthController extends \jsonrpc\Controller
 {
 
+    /**
+     * Registers a new user
+     * 
+     * @param RegistrationModel $data
+     * @return array New user token
+     */
     public function rpcRegister(RegistrationModel $data)
     {
         $user = new User;
@@ -21,9 +27,17 @@ class AuthController extends \jsonrpc\Controller
         return [ 'token' => $user->access_token ];
     }
 
+    /**
+     * Authenticates a user
+     * 
+     * @param LoginModel $data
+     * @return array New user token
+     * @throws \yii\web\UnauthorizedHttpException
+     */
     public function rpcLogin(LoginModel $data)
     {
         $user = User::findByUsername($data->email);
+        
         if (empty($user)) {
             throw new \yii\web\UnauthorizedHttpException('Invalid credentials');
         }
