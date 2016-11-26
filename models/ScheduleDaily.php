@@ -76,10 +76,23 @@ class ScheduleDaily extends \yii\db\ActiveRecord
     
     private function addVisit(Schedule $schedule)
     {
-        // !!! CHECK IF INTERVALS OVERLAP
+        // Ccheck if intervals overlap
+        $visitList = $this->getVisitList();
+        foreach ($visitList as $interval) {
+            if ($schedule->reserved_from >= $interval['reserved_from']
+             && $schedule->reserved_from <= $interval['reserved_till']) {
+                throw new \Exception('Intervals overlap');
+            }
+            
+            if ($schedule->reserved_till >= $interval['reserved_from']
+             && $schedule->reserved_till <= $interval['reserved_till']) {
+                throw new \Exception('Intervals overlap');
+            }
+        }
         
+        // Add new interval
         $this->setVisitList(array_merge(
-                $this->getVisitList(),
+                $visitList,
                 [[
                     'reserved_from' => $schedule->reserved_from,
                     'reserved_till' => $schedule->reserved_till,
