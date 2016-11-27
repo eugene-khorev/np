@@ -1,0 +1,1 @@
+../../frontend/scripts/vendor-bundle.js
