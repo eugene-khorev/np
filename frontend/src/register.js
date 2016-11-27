@@ -70,7 +70,7 @@ export class Register {
    * Checks if fields are empty
    */
   get canRegister() {
-    return (this.email != '' && this.password != '' && this.passwordRepeat != '');
+    return (!this.api.isRequesting && this.email != '' && this.password != '' && this.passwordRepeat != '');
   }
 
 }

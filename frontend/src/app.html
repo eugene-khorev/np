@@ -9,6 +9,10 @@
         <span>Napopravku</span>
       </a>
     </div>
+      
+    <form class="navbar-form navbar-right">
+      <button class="btn" if.bind="isAuhthorized" click.delegate="logout()" >Logout</<button>
+    </form>
   </nav>
 
   <loading-indicator loading.bind="router.isNavigating || api.isRequesting"></loading-indicator>

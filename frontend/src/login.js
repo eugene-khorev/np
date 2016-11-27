@@ -61,7 +61,7 @@ export class Login {
    * Checks if fields are empty
    */
   get canLogin() {
-    return (this.email != '' && this.password != '');
+    return (!this.api.isRequesting && this.email != '' && this.password != '');
   }
 
 }

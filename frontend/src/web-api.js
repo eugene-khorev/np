@@ -51,6 +51,20 @@ export class WebAPI {
   }
 
   /**
+   * Saves authToken to local storage
+   */
+  set authToken(token) {
+    localStorage.setItem('authToken', token);
+  }
+
+  /**
+   * Loads authToken from local storage
+   */
+  get authToken() {
+    return localStorage.getItem('authToken');
+  }
+
+  /**
    * Makes JSON RPC request. Returns promise
    */
   makeRequest(url, method, params) {
@@ -76,6 +90,7 @@ export class WebAPI {
           if (response.content.error) {
             switch(response.content.error.code) {
               case 403: // Forbiden
+                this.authToken = '';
                 this.ea.publish(new Unauthorized())
                 break;
                 
@@ -124,6 +139,13 @@ export class WebAPI {
       }
     });
   }
+
+  /**
+   * Makes logout JSON RPC request
+   */
+  logout(email, password){
+    return this.makeRequest('auth/rpc', 'Logout', {});
+  }
   
   /**
    * Makes registration JSON RPC request
@@ -143,6 +165,15 @@ export class WebAPI {
    */
   getDoctorList(){
     return this.makeRequest('doctor/rpc', 'GetList');
+  }
+
+  /**
+   * Makes doctor schedule JSON RPC request
+   */
+  getDoctorSchedule(id){
+    return this.makeRequest('doctor/rpc', 'GetSchedule', {
+      doctorId: id
+    });
   }
 
 }

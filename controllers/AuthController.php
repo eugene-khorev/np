@@ -57,4 +57,22 @@ class AuthController extends \jsonrpc\Controller
         return [ 'token' => $user->access_token ];
     }
 
+    /**
+     * Logs user out
+     * 
+     * @return array New user token
+     * @throws \yii\web\UnauthorizedHttpException
+     */
+    public function rpcLogout() {
+        $authorization = \Yii::$app->request->getHeaders()->get('Authorization');
+        $token = substr($authorization, 7);
+        
+        $user = User::findIdentityByAccessToken($token);
+        if (!empty($user)) {
+            $user->ResetAccessToken();
+        }
+        
+        return [ 'token' => null ];
+    }
+
 }
