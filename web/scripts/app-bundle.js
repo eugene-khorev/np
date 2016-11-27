@@ -1,0 +1,1 @@
+../../frontend/scripts/app-bundle.js
