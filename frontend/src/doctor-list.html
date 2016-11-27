@@ -1,0 +1,12 @@
+<template>
+  <div class="doctor-list">
+    <ul class="list-group">
+      <li repeat.for="doctor of doctors" class="list-group-item">
+        <a route-href="route: doctor-schedule; params.bind: {id:doctor.id}">
+          <h4 class="list-group-item-heading">${doctor.name}</h4>
+          <p class="list-group-item-text">${doctor.description}</p>
+        </a>
+      </li>
+    </ul>
+  </div>
+</template>

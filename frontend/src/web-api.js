@@ -138,4 +138,11 @@ export class WebAPI {
     });
   }
 
+  /**
+   * Makes doctor list JSON RPC request
+   */
+  getDoctorList(){
+    return this.makeRequest('doctor/rpc', 'GetList');
+  }
+
 }
