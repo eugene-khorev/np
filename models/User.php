@@ -32,7 +32,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             if (empty($this->access_token)) {
                 // Generate access token
                 $this->access_token = \Yii::$app->security->generateRandomString();
-                $this->access_token_expires = date('Y-m-d H:i:s', strtotime('now + 15 minutes'));
+                $this->access_token_expires = static::getTokenExpirationTime();
             }
             
             return true;
@@ -54,9 +54,16 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        return static::find()
+        $user = static::find()
                 ->where(['access_token' => $token])
                 ->andWhere(['>', 'access_token_expires', date('Y-m-d H:i:s')])->one();
+        
+        if (!empty($user)) {
+            $user->access_token_expires = static::getTokenExpirationTime();
+            $user->save();
+        }
+        
+        return $user;
     }
 
     /**
@@ -122,4 +129,14 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return md5($password);
     }
 
+    /**
+     * Returns token expiration time
+     * 
+     * @return string Date and time
+     */
+    private static function getTokenExpirationTime()
+    {
+        return date('Y-m-d H:i:s', strtotime('now + 15 minutes'));
+    }
+    
 }
