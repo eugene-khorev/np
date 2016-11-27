@@ -124,4 +124,18 @@ export class WebAPI {
       }
     });
   }
+  
+  /**
+   * Makes registration JSON RPC request
+   */
+  register(email, password, passwordRepeat){
+    return this.makeRequest('auth/rpc', 'Register', {
+      data: {
+        email: email,
+        password: password,
+        password_repeat: passwordRepeat
+      }
+    });
+  }
+
 }

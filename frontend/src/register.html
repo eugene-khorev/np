@@ -1,0 +1,39 @@
+<template>
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3 class="panel-title">Login</h3>
+    </div>
+    <div class="panel-body">
+        
+      <form role="form" class="form-horizontal">
+        <div class="form-group ${hasEmailError ? 'has-error' : ''}">
+          <label class="col-sm-2 control-label">Email</label>
+          <div class="col-sm-10">
+            <input type="email" placeholder="Email" class="form-control" value.bind="email">
+            <span class="help-block" if.bind="hasEmailError">${errors.email}</span>
+          </div>
+        </div>
+          
+        <div class="form-group ${hasPasswordError ? 'has-error' : ''}">
+          <label class="col-sm-2 control-label">Password</label>
+          <div class="col-sm-10">
+            <input type="password" placeholder="Password" class="form-control" value.bind="password">
+            <span class="help-block" if.bind="hasPasswordError">${errors.password}</span>
+          </div>
+        </div>
+          
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Repeat password</label>
+          <div class="col-sm-10">
+            <input type="password" placeholder="Repeat password" class="form-control" value.bind="passwordRepeat">
+          </div>
+        </div>
+      </form>
+      <div class="alert alert-danger" role="alert" if.bind="message">${message}</div>
+    </div>
+  </div>
+
+  <div class="button-bar">
+    <button class="btn btn-success" click.delegate="register()" disabled.bind="!canRegister">Register</button>
+  </div>
+</template>
