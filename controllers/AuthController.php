@@ -17,10 +17,14 @@ class AuthController extends \jsonrpc\Controller
      */
     public function rpcRegister(RegistrationModel $data)
     {
-        $user = new User;
-        $user->setAttribute('username', $data->email);
-        $user->setAttribute('password', $data->password);
-        $user->save();
+        try {
+            $user = new User;
+            $user->setAttribute('username', $data->email);
+            $user->setAttribute('password', $data->password);
+            $user->save();
+        } catch(\yii\db\IntegrityException $ex) {
+            throw new \jsonrpc\ValidationException('Email already used', 0, [ 'email' => 'Email already used' ]);
+        }
         
         \Yii::$app->user->login($user);
         
