@@ -8,6 +8,14 @@ a:focus {
   outline: none;
 }
 
+.container-main {
+  width: 1150px;
+  .col-md-6 {
+    width: 50% !important;
+    float: left !important;
+  }
+}
+
 .navbar-nav li.loader {
     margin: 12px 24px 0 6px;
 }
@@ -34,7 +42,7 @@ a:focus {
   background: white;
 }
 
-.button-bar > button {
+.button-bar > .btn {
   float: right;
   margin: 20px;
 }
