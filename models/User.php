@@ -101,6 +101,9 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return false;
     }
 
+    /**
+     * Resets auth token
+     */
     public function ResetAccessToken()
     {
         $this->access_token = null;

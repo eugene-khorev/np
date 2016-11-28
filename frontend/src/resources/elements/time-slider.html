@@ -1,0 +1,9 @@
+<template>
+  <div ref="elemennt" class="time-slider">
+    <div class="time-slider-container">
+      <button repeat.for="range of slider" click.delegate="parent.setTime(range.time)" class="time-slider-interval btn -btn-sm ${range.reserved ? 'btn-danger' : 'btn-default'}">
+        ${range.time}
+      </button>
+    </div>
+  </div>
+</template>

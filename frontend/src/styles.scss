@@ -50,3 +50,23 @@ li.list-group-item > a {
 li.list-group-item.active > a {
   color: white;
 }
+
+.time-slider {
+
+  .time-slider-container {
+    // display: table;
+    // width: 100%;
+
+    .time-slider-interval {
+      // display: table-cell;
+      // border: solid 1px #000;
+      // text-align: center;
+      // font-size: 0.75em;
+
+      &.is-reserved {
+        // background: #f00;
+        // color: #fff;
+      }
+    }
+  }
+}

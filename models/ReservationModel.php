@@ -10,6 +10,9 @@ class ReservationModel extends Model
     public $doctorId;
     public $reservationTime;
 
+    /**
+     * @inheritdoc
+     */
     public function rules()
     {
         return [

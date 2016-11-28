@@ -143,6 +143,7 @@
               "css/bootstrap.css"
             ]
           },
+          "moment",
           {
             "name": "pickmeup",
             "path": "../node_modules/pickmeup",

@@ -11,6 +11,9 @@ class RegistrationModel extends Model
     public $password;
     public $password_repeat;
 
+    /**
+     * @inheritdoc
+     */
     public function rules()
     {
         return [

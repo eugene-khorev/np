@@ -11,7 +11,7 @@ function getId(){
 }
 
 /**
- * API error class 
+ * API error class
  * Stores specific JSON RPC error data
  */
 class WebAPIError extends Error {
@@ -23,10 +23,10 @@ class WebAPIError extends Error {
     if (data) {
       message = '';
     }
-    
+
     // Init an instance
     super(message, null, null);
-    
+
     this.code = code;
     this.data = data;
   }
@@ -70,7 +70,7 @@ export class WebAPI {
   makeRequest(url, method, params) {
     // Set state of loading indicator
     this.isRequesting = true;
-    
+
     // Create request promise
     return new Promise((resolve, reject) => {
       client.createRequest(url)
@@ -86,14 +86,14 @@ export class WebAPI {
         })
         .send()
         .then((response) => { // Normal JSON RPC response
-          // Check error codes 
+          // Check error codes
           if (response.content.error) {
             switch(response.content.error.code) {
               case 403: // Forbiden
                 this.authToken = '';
                 this.ea.publish(new Unauthorized())
                 break;
-                
+
               default:
             }
           }
@@ -117,7 +117,7 @@ export class WebAPI {
         })
         .catch((response) => { // Error on server
           alert('Server error. Please try later...')
-          
+
           let error = new WebAPIError(
             response.statusText,
             response.statusCode
@@ -146,7 +146,7 @@ export class WebAPI {
   logout(email, password){
     return this.makeRequest('auth/rpc', 'Logout', {});
   }
-  
+
   /**
    * Makes registration JSON RPC request
    */
@@ -170,9 +170,24 @@ export class WebAPI {
   /**
    * Makes doctor schedule JSON RPC request
    */
-  getDoctorSchedule(id){
+  getDoctorSchedule(id, date){
     return this.makeRequest('doctor/rpc', 'GetSchedule', {
-      doctorId: id
+      data: {
+        doctorId: id,
+        reservationTime: date,
+      }
+    });
+  }
+
+  /**
+   * Makes doctor schedule reservation JSON RPC request
+   */
+  updateDoctorSchedule(id, date){
+    return this.makeRequest('doctor/rpc', 'UpdateSchedule', {
+      data: {
+        doctorId: id,
+        reservationTime: date,
+      }
     });
   }
 

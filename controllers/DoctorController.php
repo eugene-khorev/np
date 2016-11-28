@@ -24,7 +24,7 @@ class DoctorController extends \jsonrpc\Controller
 
     /**
      * Returns list of doctors
-     * 
+     *
      * @return array
      */
     public function rpcGetList()
@@ -34,19 +34,27 @@ class DoctorController extends \jsonrpc\Controller
 
     /**
      * Returns reserved time of a doctor
-     * 
+     *
      * @param type $doctorId
      * @return type
      */
-    public function rpcGetSchedule($doctorId)
+    public function rpcGetSchedule(ReservationModel $data)
     {
         return [
+            'reservation_time' => Doctor::GetReservationTime(),
             'reservation_from' => Doctor::GetReservationFrom(),
             'reservation_till' => Doctor::GetReservationTill(),
-            'reserved' => Doctor::GetScheduledTime($doctorId),
+            'reserved' => Doctor::GetScheduledTime($data->doctorId, $data->reservationTime),
             ];
     }
 
+    /**
+     * Reserves time in doctor schedule
+     * 
+     * @param ReservationModel $data
+     * @return Schedule
+     * @throws \Exception
+     */
     public function rpcUpdateSchedule(ReservationModel $data)
     {
         // Find specified doctor
@@ -54,21 +62,21 @@ class DoctorController extends \jsonrpc\Controller
         if (empty($doctor)) {
             throw new \Exception('Doctor not found');
         }
-        
+
         // Init Schedule entity
         $schedule = new Schedule;
         $schedule->doctor_id = $data->doctorId;
         $schedule->user_id = \Yii::$app->user->getId();
         $schedule->reserved_from = $data->reservationTime;
-        $schedule->reserved_till = date('Y-m-d H:i:s', 
-                strtotime($data->reservationTime) + $doctor->GetReservationTime()
+        $schedule->reserved_till = date('Y-m-d H:i:s',
+                strtotime($data->reservationTime) + Doctor::GetReservationTime()
                 );
-        
+
         ScheduleDaily::reserveTimeInterval($schedule);
-        
+
         $schedule->save();
-        
+
         return $schedule;
     }
-    
+
 }
