@@ -1,25 +1,18 @@
 <template>
+  <require from="pickmeup/css/pickmeup.css"></require>
+  <require from="./resources/elements/date-picker"></require>
+
   <div class="panel panel-primary">
     <div class="panel-heading">
       <h3 class="panel-title">Schedule</h3>
     </div>
     <div class="panel-body">
-      <form role="form" class="form-horizontal">
-        <div repeat.for="rage of schedule" class="form-group">
-          <label class="col-sm-2 control-label">Reserved from</label>
-          <div class="col-sm-10">
-            <input type="text" placeholder="reserved from" class="form-control" value.bind="rage.reserved_from">
-          </div>
-          <label class="col-sm-2 control-label">Reserved till</label>
-          <div class="col-sm-10">
-            <input type="text" placeholder="reserved till" class="form-control" value.bind="rage.reserved_till">
-          </div>
-        </div>
-      </form>
+      <date-picker></date-picker>
     </div>
   </div>
 
   <div class="button-bar">
     <button class="btn btn-success" click.delegate="reserve()" disabled.bind="!canReserve">Reserve</button>
   </div>
+
 </template>

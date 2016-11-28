@@ -144,6 +144,16 @@
             ]
           },
           {
+            "name": "pickmeup",
+            "path": "../node_modules/pickmeup",
+            "main": "js/pickmeup.js",
+            "deps": ["jquery", "bootstrap"],
+            "exports": "pickmeup",
+            "resources": [
+              "css/pickmeup.css"
+            ]
+          },
+          {
             "name": "nprogress",
             "path": "../node_modules/nprogress",
             "main": "nprogress",

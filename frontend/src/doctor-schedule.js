@@ -21,6 +21,7 @@ export class DoctorSchedule {
       this.doctor = params.id;
       this.schedule = schedule;
       this.originalDoctor = params.id;
+//      $('#datepicker').datepicker();
     });
   }
 
