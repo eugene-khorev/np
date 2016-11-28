@@ -13,6 +13,12 @@ class Doctor extends \yii\db\ActiveRecord
     const RESERVATION_TIME = 30*60;
     
     /**
+     * Working hours
+     */
+    const RESERVATION_FROM = 9;
+    const RESERVATION_TILL = 18;
+    
+    /**
      * @inheritdoc
      */
     public function rules()
@@ -56,6 +62,7 @@ class Doctor extends \yii\db\ActiveRecord
     public function getSchedule()
     {
         return $this->hasMany(Schedule::className(), [ 'doctor_id' => 'id']);
+        
     }
 
     /**
@@ -66,6 +73,26 @@ class Doctor extends \yii\db\ActiveRecord
     public function GetReservationTime()
     {
         return static::RESERVATION_TIME;
+    }
+
+    /**
+     * Returns Interval to reserve
+     * 
+     * @return int Seconds to reserve in schedule
+     */
+    public static function GetReservationFrom()
+    {
+        return static::RESERVATION_FROM;
+    }
+
+    /**
+     * Returns Interval to reserve
+     * 
+     * @return int Seconds to reserve in schedule
+     */
+    public static function GetReservationTill()
+    {
+        return static::RESERVATION_TILL;
     }
 
 }

@@ -40,7 +40,11 @@ class DoctorController extends \jsonrpc\Controller
      */
     public function rpcGetSchedule($doctorId)
     {
-        return Doctor::GetScheduledTime($doctorId);
+        return [
+            'reservation_from' => Doctor::GetReservationFrom(),
+            'reservation_till' => Doctor::GetReservationTill(),
+            'reserved' => Doctor::GetScheduledTime($doctorId),
+            ];
     }
 
     public function rpcUpdateSchedule(ReservationModel $data)
