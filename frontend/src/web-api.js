@@ -54,7 +54,7 @@ export class WebAPI {
    * Saves authToken to local storage
    */
   set authToken(token) {
-    localStorage.setItem('authToken', token);
+    localStorage.setItem('authToken', token || '');
   }
 
   /**
@@ -62,6 +62,20 @@ export class WebAPI {
    */
   get authToken() {
     return localStorage.getItem('authToken');
+  }
+
+  /**
+   * Returns interceptor that adds token to authorization HTTP header
+   */
+  get tokenInterceptor() {
+    let token = this.authToken;
+    return {
+      request(request) {
+        if ('string' === typeof token && token.length > 0) {
+          request.headers.add('Authorization', 'Bearer ' + token);
+        }
+      }
+    }
   }
 
   /**
@@ -76,7 +90,7 @@ export class WebAPI {
       client.createRequest(url)
         .asPost()
         .withBaseUrl('/')
-        .withHeader('Authorization', 'Bearer ' + this.authToken)
+        .withInterceptor(this.tokenInterceptor)
         .withResponseType('json')
         .withContent({
           "jsonrpc": "2.0",
