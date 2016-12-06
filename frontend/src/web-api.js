@@ -4,12 +4,6 @@ import {Unauthorized} from './messages';
 
 let client = new HttpClient();
 
-let id = 0;
-
-function getId(){
-  return ++id;
-}
-
 /**
  * API error class
  * Stores specific JSON RPC error data
@@ -39,6 +33,11 @@ export class WebAPI {
   static inject = [EventAggregator];
 
   /**
+   * Incremental JSON RPC request ID
+   */
+  id = 0;
+
+  /**
    * Requesting state (for loading indicator)
    */
   isRequesting = false;
@@ -48,6 +47,13 @@ export class WebAPI {
    */
   constructor(ea) {
     this.ea = ea;
+  }
+
+  /**
+   * Returns next request ID
+   */
+  get requestId() {
+    return ++this.id;
   }
 
   /**
@@ -96,7 +102,7 @@ export class WebAPI {
           "jsonrpc": "2.0",
           "method": method,
           "params": params,
-          "id": getId()
+          "id": this.requestId
         })
         .send()
         .then((response) => { // Normal JSON RPC response
